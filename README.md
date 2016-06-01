@@ -3,6 +3,8 @@ This is a tutorial on how to utilize filter and action hooks for the WooCommerce
 
 Lightspeed POS has been extended to support filters that you can hook into. This allows for better customization, e.g., You want the Update action to only update the inventory field and not override other fields such as title and content.
 
+See the functions.php file for examples on how to utilize the below filters and action hooks.
+  
 **Filters for matrix/variable products:**
 
 For the import action:
