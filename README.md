@@ -1,9 +1,9 @@
 # woocommerce-lightspeed-hooks
-A tutorial on how to utilize filter and action hooks for the WooCommerce Lightspeed POS integration plugin
+This is a tutorial on how to utilize filter and action hooks for the WooCommerce Lightspeed POS integration plugin.
 
 Lightspeed POS has been extended to support filters that you can hook into. This allows for better customization, e.g., You want the Update action to only update the inventory field and not override other fields such as title and content.
 
-*Filters for matrix/variable products:*
+**Filters for matrix/variable products:**
 
 For the import action:
 
@@ -25,7 +25,7 @@ Syncing from WooCommerce to Lightspeed (Matrix/Variable products):
 - wclsi_sync_to_ls_variation_prod - filters a variation prod array to be synced with Lightspeed
   Filters for simple products:
 
-*Filters for single/simple products:*
+**Filters for single/simple products:**
   
 For the update action (single/simple items):
 
