@@ -11,6 +11,26 @@
    */
 
   /**
+   * An example of how to access Lightspeed custom fields.
+   * You can utilize WordPress's "update_post_metadata" hook to gain access
+   * to a product's Lightspeed data on an import.
+   *
+   * Make sure that if you're calling "update_post_meta" again within this
+   * filter to remove it in your logic to prohibit an infinite loop from
+   * occuring.
+   */
+  function check_for_custom_fields( $mid, $object_id, $meta_key, $_meta_value ) {
+    if( '_wclsi_ls_obj' == $meta_key ) {
+      error_log("PostID: " . $object_id);
+      if( isset( $_meta_value->CustomFieldValues ) ) {
+        error_log("Lightspeed custom field values:" . print_r( $_meta_value->CustomFieldValues, true ) );
+        // add your custom fields here by referencing $_meta_value->CustomFieldValues
+      }
+    }
+  }
+  add_filter('update_post_metadata', 'check_for_custom_fields', 10, 4);
+  
+  /**
    * Scopes simple product updates to just the inventory value.
    * This means that whenever a simple product gets updated -- either via a manual
    * update action, or an automated scheduled update, then the only product property
