@@ -6,10 +6,7 @@
    * Author URI:  http://www.rafilabs.com
    * License:     GPL2
    * License URI: https://www.gnu.org/licenses/gpl-2.0.html
-   * Description:
-   *
-   * This is an example plugin on how to utilize filter and action hooks for
-   * the WooCommerce Lightspeed POS integration plugin to further customize it's functionality.
+   * Description: An example plugin on how to utilize filter and action hooks for the WooCommerce Lightspeed POS integration plugin to further customize it's functionality.
    *
    * Lightspeed POS has been extended to support filters that you can hook into.
    * This allows for better customization, e.g., You want the Update action to only update
