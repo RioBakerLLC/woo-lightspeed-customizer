@@ -1,14 +1,30 @@
 <?php
   /**
-   * License: MIT License, https://opensource.org/licenses/MIT
+   * Plugin Name: Woo Lightspeed Customizer
+   * Plugin URI:  https://docs.woothemes.com/document/woocommerce-lightspeed-pos/
+   * Author:      Rafi Yagudin
+   * Author URI:  http://www.rafilabs.com
+   * License:     GPL2
+   * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+   * Description:
+   *
+   * This is an example plugin on how to utilize filter and action hooks for
+   * the WooCommerce Lightspeed POS integration plugin to further customize it's functionality.
+   *
+   * Lightspeed POS has been extended to support filters that you can hook into.
+   * This allows for better customization, e.g., You want the Update action to only update
+   * the inventory field and not override other fields such as title and content.
+   *
+   * See the functions.php file for examples on how to utilize the below filters and action hooks.
    *
    * Note: These are purely examples, and have not necessarily been tested and hardened for production environments.
    * I highly recommend to test this code on your own QA/staging environments before applying it directly
    * to your production environment. I am not liable for any damage/issues this code may cause.
    * See more detail here: https://opensource.org/licenses/MIT.
    *
-   * I am assuming you are placing this code in your theme's functions.php file.
    */
+
+  defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
   /**
    * An example of how to access Lightspeed custom fields.
