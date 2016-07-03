@@ -89,7 +89,7 @@ function update_polylang_inventory( $post_id, $inventory ) {
     $wc_prod = wc_get_product( $post_id );
 
     $translations = \Hyyan\WPI\Utilities::getProductTranslationsArrayByObject( $wc_prod );
-    $productLang  = pll_get_post_language( $new_ls_prod->wc_prod_id );
+    $productLang  = pll_get_post_language( $wc_prod->get_id() );
 
     /* Remove the current product from translation array */
     if ( ! empty( $translations ) ) {
@@ -100,5 +100,4 @@ function update_polylang_inventory( $post_id, $inventory ) {
     }
   }
 }
-
 add_action( 'wclsi_update_wc_stock', 'update_polylang_inventory', 10, 2 );
