@@ -12,13 +12,12 @@
  * This allows for better customization, e.g., You want the Update action to only update
  * the inventory field and not override other fields such as title and content.
  *
- * See the functions.php file for examples on how to utilize the below filters and action hooks.
+ *  -- !! Warning !! --
  *
- * Note: These are purely examples, and have not necessarily been tested and hardened for production environments.
- * I highly recommend to test this code on your own QA/staging environments before applying it directly
+ * These are purely examples, and have not necessarily been tested and hardened for production environments.
+ * I highly recommend you to test this code on your own QA/staging environments before applying it directly
  * to your production environment. I am not liable for any damage/issues this code may cause.
  * See more detail here: https://opensource.org/licenses/MIT.
- *
  */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
