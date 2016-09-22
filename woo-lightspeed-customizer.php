@@ -23,6 +23,30 @@
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 /**
+ * A filter hook example of how to filter single product imports from Lightspeed based on a 'webstore' tag.
+ *
+ * I'd highly recommend to read up on searching Lightspeed's API docs on how to properly
+ * format search queries: https://www.lightspeedhq.com/webhelp/retail/en/content/developer-api/api-search.html
+ */
+function wclsi_filter_single_prods_by_tags( $search_params ) {
+    $search_params['tag'] = 'webstore';
+    return $search_params;
+}
+add_filter('wclsi_ls_import_prod_params', 'wclsi_filter_single_prods_by_tags');
+
+/**
+ * A filter hook example of how to filter matrix product imports from Lightspeed based on a 'webstore' tag.
+ *
+ * I'd highly recommend to read up on searching Lightspeed's API docs on how to properly
+ * format search queries: https://www.lightspeedhq.com/webhelp/retail/en/content/developer-api/api-search.html
+ */
+function wclsi_filter_matrix_prods_by_tags( $search_params ) {
+    $search_params['tag'] = 'webstore';
+    return $search_params;
+}
+add_filter('wclsi_ls_import_matrix_params', 'wclsi_filter_matrix_prods_by_tags');
+
+/**
  * An example of how to access Lightspeed custom fields.
  * You can utilize WordPress's "update_post_metadata" hook to gain access
  * to a product's Lightspeed data on an import.
@@ -31,7 +55,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
  * filter to remove it in your logic to prohibit an infinite loop from
  * occuring.
  */
-function check_for_custom_fields( $mid, $object_id, $meta_key, $_meta_value ) {
+function wclsi_check_for_custom_fields($mid, $object_id, $meta_key, $_meta_value ) {
   if( '_wclsi_ls_obj' == $meta_key ) {
     error_log("PostID: " . $object_id);
     if( isset( $_meta_value->CustomFieldValues ) ) {
@@ -40,7 +64,7 @@ function check_for_custom_fields( $mid, $object_id, $meta_key, $_meta_value ) {
     }
   }
 }
-add_filter('update_post_metadata', 'check_for_custom_fields', 10, 4);
+add_filter('update_post_metadata', 'wclsi_check_for_custom_fields', 10, 4);
 
 /**
  * Scopes simple product updates to just the inventory value.
@@ -51,39 +75,39 @@ add_filter('update_post_metadata', 'check_for_custom_fields', 10, 4);
  * Note that you'll need also need to add filters to the simple product images and
  * post_fields in order to limit the update even more.
  */
-function filter_lightspeed_single_prod_post_meta_updates( $meta_fields, $post_id){
+function wclsi_filter_lightspeed_single_prod_post_meta_updates($meta_fields, $post_id){
   $filtered_meta_fields = array();
   $filtered_meta_fields['_stock'] = $meta_fields['_stock'];
   return $filtered_meta_fields;
 }
-add_filter('wclsi_update_prod_meta_fields_single_item', 'filter_lightspeed_single_prod_post_meta_updates', 10, 2);
+add_filter('wclsi_update_prod_meta_fields_single_item', 'wclsi_filter_lightspeed_single_prod_post_meta_updates', 10, 2);
 
 /**
  * Removes title and post content for Lightspeed simple product updates.
  * Note: will apply on a manual update as well as a scheduled update.
  */
-function filter_lightspeed_single_prod_field_updates( $post_fields, $post_id ) {
+function wclsi_filter_lightspeed_single_prod_field_updates( $post_fields, $post_id ) {
   $filtered_post_fields       = array();
   $filtered_post_fields['ID'] = $post_fields['ID'];
   return $filtered_post_fields;
 }
-add_filter( 'wclsi_update_post_fields_single_item', 'filter_lightspeed_single_prod_field_updates', 10, 2 );
+add_filter( 'wclsi_update_post_fields_single_item', 'wclsi_filter_lightspeed_single_prod_field_updates', 10, 2 );
 
 /**
  * Overwrites the images array so that no images are updated on an update action
  * for a simple product update.
  */
-function filter_lightspeed_single_prod_imgs_updates( $imgs, $post_id){
+function wclsi_filter_lightspeed_single_prod_imgs_updates( $imgs, $post_id){
   return array();
 }
-add_filter('wclsi_update_prod_imgs_single_item', 'filter_lightspeed_single_prod_imgs_updates', 10, 2);
+add_filter('wclsi_update_prod_imgs_single_item', 'wclsi_filter_lightspeed_single_prod_imgs_updates', 10, 2);
 
 /**
  * Polylang <> WooCommerce Lightspeed POS integration:
  * Updates Polylang product inventory on Lightspeed
  * inventory updates.
  */
-function update_polylang_inventory( $post_id, $inventory ) {
+function wclsi_update_polylang_inventory( $post_id, $inventory ) {
   if ( class_exists( "\\Hyyan\\WPI\\Utilities" ) && function_exists( 'pll_get_post_language' ) ) {
     $wc_prod = wc_get_product( $post_id );
 
@@ -99,4 +123,4 @@ function update_polylang_inventory( $post_id, $inventory ) {
     }
   }
 }
-add_action( 'wclsi_update_wc_stock', 'update_polylang_inventory', 10, 2 );
+add_action( 'wclsi_update_wc_stock', 'wclsi_update_polylang_inventory', 10, 2 );
