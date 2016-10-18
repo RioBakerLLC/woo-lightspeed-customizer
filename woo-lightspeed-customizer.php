@@ -12,6 +12,9 @@
  * This allows for better customization, e.g., You want the Update action to only update
  * the inventory field and not override other fields such as title and content.
  *
+ * Please make sure you are on the latest version of the WooCommerce Lightspeed POS plugin before
+ * attempting to use these customizations.
+ *
  *  -- !! Warning !! --
  *
  * These are purely examples, and have not necessarily been tested and hardened for production environments.
@@ -21,6 +24,55 @@
  */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
+/**
+ * An example of how to use the 'wclsi_update_product' and the 'wclsi_import_product'
+ * filter hooks to introduce inventory logic. In the example below, we are scoping
+ * the inventory down to a specific Lightspeed shop ID.
+ *
+ * @param $ls_product
+ * @return mixed
+ */
+
+function wclsi_scope_inventory_by_shop_id( $inventory, $ls_product ) {
+
+    /**
+     * You can find the ID of your shop by signing into Lightspeed and
+     * navigating to Settings > Shop Setup. Click on the shop you'd like
+     * to scope your inventory to.
+     *
+     * After clicking on the shop, examine the URL. It should look something like this:
+     *
+     * https://us.merchantos.com/?name=admin.views.shop&form_name=view&id=2&tab=details
+     *
+     * You'll notice that in the URL, there's a parameter called "id=" followed by a number.
+     * The number is your shop's unique ID. In the example above, the shop ID is 2: "id=2".
+     */
+    $SHOP_ID = 2;
+
+    $item_shops = $ls_product->ItemShops->ItemShop;
+
+    $scoped_item_shop = null;
+
+    if( isset( $item_shops ) && is_array( $item_shops ) ) {
+        foreach( $item_shops as $key => $item_shop ) {
+            if( !empty( $item_shop->shopID ) && $item_shop->shopID == $SHOP_ID ) {
+                $scoped_item_shop = $item_shop;
+                break;
+            }
+        }
+    } else {
+        return $inventory; // Don't do anything if we can't find shop IDs
+    }
+
+    if( !is_null( $scoped_item_shop ) && isset( $scoped_item_shop->qoh ) ) {
+        return $scoped_item_shop->qoh;
+    } else {
+        return $inventory;
+    }
+}
+
+add_filter('wclsi_get_lightspeed_inventory', 'wclsi_scope_inventory_by_shop_id', 10, 2);
 
 /**
  * A filter hook example of how to filter single product imports from Lightspeed based on a 'webstore' tag.
