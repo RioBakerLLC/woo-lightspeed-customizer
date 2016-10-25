@@ -25,16 +25,9 @@
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-/**
- * An example of how to use the 'wclsi_update_product' and the 'wclsi_import_product'
- * filter hooks to introduce inventory logic. In the example below, we are scoping
- * the inventory down to a specific Lightspeed shop ID.
- *
- * @param $ls_product
- * @return mixed
- */
+require_once 'helper_functions.php';
 
-function wclsi_scope_inventory_by_shop_id( $inventory, $ls_product ) {
+function wclsi_scope_pushed_inventory_by_shop_id( $ls_product, $inventory, $post_id ) {
 
     /**
      * You can find the ID of your shop by signing into Lightspeed and
@@ -50,29 +43,49 @@ function wclsi_scope_inventory_by_shop_id( $inventory, $ls_product ) {
      */
     $SHOP_ID = 2;
 
-    $item_shops = $ls_product->ItemShops->ItemShop;
+    $ls_prod_with_scoped_inventory = wclsi_scope_ls_inventory_by_shop_id($ls_product, $SHOP_ID, $inventory);
 
-    $scoped_item_shop = null;
+    return $ls_prod_with_scoped_inventory;
+}
 
-    if( isset( $item_shops ) && is_array( $item_shops ) ) {
-        foreach( $item_shops as $key => $item_shop ) {
-            if( !empty( $item_shop->shopID ) && $item_shop->shopID == $SHOP_ID ) {
-                $scoped_item_shop = $item_shop;
-                break;
-            }
-        }
+add_filter('wclsi_push_wc_inventory_to_ls', 'wclsi_scope_pushed_inventory_by_shop_id', 10, 3);
+
+/**
+ * An example of how to use the wclsi_get_lightspeed_inventory' filter hook
+ * introduce inventory manipulation logic.
+ *
+ * In the example below, we are scoping the inventory down based on
+ * a specific Lightspeed shop ID.
+ *
+ * @param $ls_product
+ * @param $inventory
+ * @return mixed
+ */
+function wclsi_scope_imported_inventory_by_shop_id($inventory, $ls_product) {
+    /**
+     * You can find the ID of your shop by signing into Lightspeed and
+     * navigating to Settings > Shop Setup. Click on the shop you'd like
+     * to scope your inventory to.
+     *
+     * After clicking on the shop, examine the URL. It should look something like this:
+     *
+     * https://us.merchantos.com/?name=admin.views.shop&form_name=view&id=2&tab=details
+     *
+     * You'll notice that in the URL, there's a parameter called "id=" followed by a number.
+     * The number is your shop's unique ID. In the example above, the shop ID is 2: "id=2".
+     */
+    $SHOP_ID = 2;
+
+    $scoped_inventory = wclsi_get_inventory_by_shop_id( $ls_product, $SHOP_ID );
+
+    if( !is_null( $scoped_inventory ) ) {
+        return $scoped_inventory;
     } else {
-        return $inventory; // Don't do anything if we can't find shop IDs
-    }
-
-    if( !is_null( $scoped_item_shop ) && isset( $scoped_item_shop->qoh ) ) {
-        return $scoped_item_shop->qoh;
-    } else {
-        return $inventory;
+        return 0;
     }
 }
 
-add_filter('wclsi_get_lightspeed_inventory', 'wclsi_scope_inventory_by_shop_id', 10, 2);
+add_filter('wclsi_get_lightspeed_inventory', 'wclsi_scope_imported_inventory_by_shop_id', 10, 2);
 
 /**
  * A filter hook example of how to filter single product imports from Lightspeed based on a 'webstore' tag.
