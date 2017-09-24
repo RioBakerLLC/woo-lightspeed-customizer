@@ -1,5 +1,7 @@
 # woo-lightspeed-customizer
-This is an example plugin on how to utilize filter and action hooks for the WooCommerce Lightspeed POS integration plugin to further customize it's functionality.
+This is an example plugin on how to utilize filter and action hooks for the [WooCommerce Lightspeed POS integration plugin](https://woocommerce.com/products/woocommerce-lightspeed-pos/) to further customize it's functionality.
+
+If you haven't done so yet, I highly recommend to read the documentation of the plugin if you haven't done so yet: https://docs.woocommerce.com/document/woocommerce-lightspeed-pos/.
 
 Lightspeed POS has been extended to support filters that you can hook into. This allows for better customization, e.g., You want the Update action to only update the inventory field and not override other fields such as title and content.
 
