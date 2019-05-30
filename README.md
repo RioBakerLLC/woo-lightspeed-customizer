@@ -29,15 +29,6 @@ Syncing from WooCommerce to Lightspeed (Matrix/Variable products):
 - wclsi_sync_to_ls_variation_prod - filters a variation prod array to be synced with Lightspeed
   Filters for simple products:
 
-**Filters for single/simple products:**
-  
-For the update action (single/simple items):
-
-- wclsi_update_post_fields_single_item - filters title and content fields
-- wclsi_update_post_tags_single_item - filters product tags for update action
-- wclsi_update_prod_meta_fields_single_item - filters post meta fields for update action
-- wclsi_update_post_imgs_single_item - filters images for update actions
-
 Syncing from WooCommerce to Lightspeed:
 
 - wclsi_sync_to_ls_simple_prod - filters a simple prod array to be synced with Lightspeed
